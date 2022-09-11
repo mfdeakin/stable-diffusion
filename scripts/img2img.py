@@ -200,7 +200,7 @@ def main():
     model = load_model_from_config(config, f"{opt.ckpt}")
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    model = model.to(device)
+    model = model.to(device).half()
 
     if opt.plms:
         raise NotImplementedError("PLMS sampler not (yet) supported")
@@ -230,7 +230,7 @@ def main():
     grid_count = len(os.listdir(outpath)) - 1
 
     assert os.path.isfile(opt.init_img)
-    init_image = load_img(opt.init_img).to(device)
+    init_image = load_img(opt.init_img).to(device).half()
     init_image = repeat(init_image, '1 ... -> b ...', b=batch_size)
     init_latent = model.get_first_stage_encoding(model.encode_first_stage(init_image))  # move to latent space
 
